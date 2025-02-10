@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"promoCode/internal/models"
 	"promoCode/internal/service"
+	"strings"
 )
 
 type AdminHandler struct {
@@ -44,10 +45,16 @@ func (a *AdminHandler) CreatePromoCode(c *gin.Context) {
 
 	if err := a.PromoService.CreatePromoCode(request); err != nil {
 		slog.Error("Failed to create promo code", "error", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	slog.Info("Promo code created successfully", "code", request.Code)
-	c.Redirect(http.StatusFound, "/admin?success=1")
+		if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
+			c.JSON(http.StatusConflict, gin.H{"error": "Promo code already exist"})
+			return
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		slog.Info("Promo code created successfully", "code", request.Code)
+		c.JSON(http.StatusOK, gin.H{"message": "Promo code created successfully"})
 
+	}
 }

@@ -67,7 +67,6 @@ func TestAPIHandler_ApplyPromoCode_InvalidJSON(t *testing.T) {
 	fakeService := &FakePromoService{}
 	handler := NewAPIHandler(fakeService)
 
-	// Передаём некорректный JSON.
 	req, err := http.NewRequest(http.MethodPost, "/api/apply", bytes.NewBufferString("{invalid"))
 	assert.NoError(t, err)
 	req.Header.Set("Content-Type", "application/json")

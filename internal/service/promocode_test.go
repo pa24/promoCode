@@ -16,15 +16,12 @@ func TestPromoService_CreatePromoCode(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	// Оборачиваем sql.DB в наш тип storage.DB.
 	storageDB := &storage.DB{DB: db}
 
-	// Ожидаем запрос INSERT в таблицу promocodes.
 	mock.ExpectExec(regexp.QuoteMeta("INSERT INTO promocodes (code, reward, max_uses, created_at) VALUES ($1, $2, $3, $4)")).
 		WithArgs("PROMO123", 100, 5, sqlmock.AnyArg()).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
-	// Инициализируем PromoService.
 	promoService := NewPromoService(storageDB)
 
 	req := models.CreatePromoRequest{

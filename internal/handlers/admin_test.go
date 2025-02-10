@@ -77,6 +77,5 @@ func TestAdminHandler_CreatePromoCode_BadRequest(t *testing.T) {
 
 	handler.CreatePromoCode(c)
 
-	// Ожидаем статус 400 Bad Request.
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 }

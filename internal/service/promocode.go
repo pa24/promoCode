@@ -19,6 +19,7 @@ func NewPromoService(db *storage.DB) PromoService {
 }
 
 func (s *PromoServiceImpl) CreatePromoCode(request models.CreatePromoRequest) error {
+
 	return storage.CreatePromoCode(s.db, request.Code, request.Reward, request.MaxUses)
 }
 
